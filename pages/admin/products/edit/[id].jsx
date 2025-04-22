@@ -3,49 +3,67 @@ import { useEffect, useState } from 'react';
 import { katalogProduct, productsData } from '@/pages/service/data/products';
 import Layout from '@/pages/components/Layout/Layout';
 import { Button, Checkbox, Label, TextInput, Select, FileInput } from 'flowbite-react';
-import { updateProduct } from '@/pages/service/product.service';
+import { updateProduct, getProductByIdDB } from '@/pages/service/product.service';
+import { getCategoriesDB } from "@/pages/service/product.service";
 
 export default function Page() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [product, setProduct] = useState({
-    product: '',
-    katalog: '',
-    stock: '',
-    price: '',
-  });
+  const [product, setProduct] = useState({});
+  const [categories, setCategories] = useState([]);
+  const categoriesData = getCategoriesDB();
 
   useEffect(() => {
     const productId = router.query.id;
-    if (productId) {
-      const dataProduct = productsData.find((product) => product.id === productId);
-      if (dataProduct) {
-        setProduct(dataProduct);  // Set state to the product data
+    const fetchProducts = async () => {
+      try {
+          const productDB = await getProductByIdDB(productId);
+          setProduct(productDB.data[0]); 
+      } catch (error) {
+          console.error("Gagal mengambil data produk:", error);
       }
-    }
-  }, [router.query.id]);
-
-  const handleEditData = (e) => {
-    e.preventDefault();
-
-    const data = {
-      id: router.query.id,
-      product: e.target.product.value,
-      katalog: e.target.katalog.value,
-      stock: e.target.stock.value,
-      price: e.target.price.value,
     };
 
-    setIsLoading(true);
+    fetchProducts();
 
-    const edit = updateProduct(data.id, data);
+    const fetchCategories = async () => {
+      try {
+          const productsData = await categoriesData;
+          setCategories(productsData.data); 
+      } catch (error) {
+          console.error("Gagal mengambil data produk:", error);
+      }
+    };
 
-    if (edit) {
-      alert('Produk berhasil diperbarui');
-      router.push('/admin/products'); // Arahkan kembali ke daftar produk
-    } else {
-      alert('Terjadi kesalahan, produk tidak ditemukan!');
+    fetchCategories();
+  }, [router.query.id]);
+
+  const handleEditData = async (e) => {
+    e.preventDefault();
+  
+    const data = new FormData();
+    data.append("id", router.query.id);
+    data.append("product", e.target.product.value);
+    data.append("category", e.target.category.value);
+    data.append("stock", e.target.stock.value);
+    data.append("price", e.target.price.value);
+  
+    const response = await fetch("/api/updateProduct", {
+      method: "POST",
+      body: data, // Kirim data sebagai FormData
+    });
+  
+    if (response.status !== 201) {
+      alert("Gagal memperbarui produk");
+      return;
     }
+  
+    const result = await response.json();
+    if (result) {
+      router.push("/admin/products");
+    }
+  
+    setIsLoading(true);
   };
 
   return (
@@ -57,18 +75,18 @@ export default function Page() {
             <form className="flex flex-col gap-4 mt-4" onSubmit={handleEditData}>
               <div>
                 <div className="mb-2 block">
-                  <Label htmlFor="katalog">Katalog</Label>
+                  <Label htmlFor="category">Kategori</Label>
                 </div>
                 <Select
-                  id="katalog"
-                  name="katalog"
-                  value={product.katalog}  // Ensure the value is bound to the product state
-                  onChange={(e) => setProduct({ ...product, katalog: e.target.value })} // Update state on select change
+                  id="category"
+                  name="category"
+                  value={product.category}  // Ensure the value is bound to the product state
+                  onChange={(e) => setProduct({ ...product, category: e.target.value })} // Update state on select change
                   required
                 >
-                  {katalogProduct.map((item) => (
-                    <option key={item.id} value={item.nama} className="text-black">
-                      {item.nama}
+                  {categories.map((item) => (
+                    <option key={item.id} value={item.id} className="text-black">
+                      {item.name}
                     </option>
                   ))}
                 </Select>
@@ -82,8 +100,8 @@ export default function Page() {
                   type="text"
                   required
                   name="product"
-                  value={product.product} // Bind the value to product state
-                  onChange={(e) => setProduct({ ...product, product: e.target.value })} // Handle input changes
+                  value={product.name} // Bind the value to product state
+                  onChange={(e) => setProduct({ ...product, name: e.target.value })}
                 />
               </div>
               <div>

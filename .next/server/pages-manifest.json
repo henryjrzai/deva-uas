@@ -2,8 +2,11 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/admin": "pages/admin.js",
   "/admin/products": "pages/admin/products.js",
+  "/admin/products/edit/[id]": "pages/admin/products/edit/[id].js",
+  "/api/getCategories": "pages/api/getCategories.js",
+  "/api/updateProduct": "pages/api/updateProduct.js",
   "/api/getProduct": "pages/api/getProduct.js",
-  "/api/deleteProduct": "pages/api/deleteProduct.js"
+  "/api/getProductById": "pages/api/getProductById.js",
+  "/katalog": "pages/katalog.js"
 }
