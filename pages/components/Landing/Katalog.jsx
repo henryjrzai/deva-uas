@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { productsData, katalogProduct } from '@/pages/service/data/products';
+import { getProductsDB } from "@/pages/service/product.service";
 import Link from 'next/link';
 
 const Katalog = (props) => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [load, setLoad] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('name-asc');
 
   useEffect(() => {
-    setProducts(productsData);
-    setLoading(false);
+    const fetchProducts = async () => {
+      try {
+          const productsDB = await getProductsDB();
+          setProducts(productsDB.data); 
+      } catch (error) {
+          console.error("Gagal mengambil data produk:", error);
+      }
+    };
+
+    fetchProducts();
     if (props.category) {
       const formattedCategory = props.category
         .split('-')
@@ -26,24 +35,16 @@ const Katalog = (props) => {
 
   const filteredProducts = products
     .filter(product => 
-      product.product.toLowerCase().includes(searchTerm.toLowerCase()) && 
-      (categoryFilter === 'all' || product.katalog === categoryFilter)
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
+      (categoryFilter === 'all' || product.category === categoryFilter)
     )
     .sort((a, b) => {
-      if (sortBy === 'name-asc') return a.product.localeCompare(b.product);
-      if (sortBy === 'name-desc') return b.product.localeCompare(a.product);
+      if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
+      if (sortBy === 'name-desc') return b.name.localeCompare(a.name);
       if (sortBy === 'price-asc') return a.price - b.price;
       if (sortBy === 'price-desc') return b.price - a.price;
       return 0;
     });
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">

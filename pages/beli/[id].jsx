@@ -1,27 +1,40 @@
 import { useRouter } from 'next/router';
-import { productsData } from '@/pages/service/data/products';
 import Layout from '../components/Layout/Layout';
+import loading from '../components/Layout/Loading';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { createTransaction } from '../service/transaction.service';
 import { isAuthenticated } from '@/pages/service/auth.service'
+import { getProductByIdDB } from '../service/product.service';
 
 export default function Page() {
     const router = useRouter();
     const [product, setProduct] = useState({});
+    const [load, setLoad] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
     const [user, setUser] = useState("");
 
     useEffect(() => {
+        if (!router.isReady) return;
         if (!isAuthenticated()) {
             router.push('/katalog');
             return;
         }
 
-        const data = productsData.find((product) => product.id === router.query.id)
-        setProduct(data);
-        setTotal(data.price * quantity)
+        const fetchProducts = async () => {
+            try {
+                const productDB = await getProductByIdDB(router.query.id);
+                setProduct(productDB.data[0]); // sesuai struktur API handler kamu
+                setTotal(productDB.data[0].price); 
+                setLoad(false);
+            } catch (error) {
+                console.error("Gagal mengambil data produk:", error);
+            }
+        };
+    
+        fetchProducts();
+        setTotal(product.price * quantity)
         const userData = localStorage.getItem('user');
         if (userData) {
             const parsedUser = JSON.parse(userData);
@@ -64,21 +77,26 @@ export default function Page() {
         }
     }
 
+    if (load) {
+        return <loading/>
+    }
+
     return (
         <Layout>
             <div className="bg-gray-50 min-h-screen">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <Link href="/katalog" className="italic text-blue-500">&#x21d0; Kembali</Link>
-                        <h2 className="text-2xl font-bold">Checkout Produk</h2>
+                        <h2 className="text-2xl font-bold">Detail Produk</h2>
                         <div className="grid sm:grid-cols-1 lg:grid-cols-2 gap-2">
                             <div className="flex items-center">
-                                <img src={`/${product.image}`} alt={product.product} className="w-sm h-full object-cover"/>
+                                <img src={`/${product.image}`} alt={product.name} className="w-sm h-full object-cover"/>
                             </div>
                             <div>
-                                <h3 className="text-3xl font-bold">{product.product}</h3>
-                                <p className="italic">{product.katalog}</p>
+                                <h3 className="text-3xl font-bold">{product.name}</h3>
+                                <p className="italic">{product.category}</p>
                                 <p>{product.price?.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</p>
+                                <p>{product.description}</p>
                                 <div className="mt-4">
                                 <form class="max-w-sm" onSubmit={handleSubmit}>
                                     <label for="qty" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah :</label>

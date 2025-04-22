@@ -2,14 +2,23 @@ import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 
 import Link from "next/link";
 import { productsData } from "@/pages/service/data/products";
 import { useEffect, useState } from "react";
-import { deleteProduct } from "@/pages/service/product.service";
+import { deleteProduct, getProductsDB } from "@/pages/service/product.service";
 
 export default function Products() {
     const [products, setProducts] = useState([]);
     
     useEffect(() => {
-        setProducts(productsData);
-    }, productsData);
+        const fetchProducts = async () => {
+            try {
+                const productsDB = await getProductsDB();
+                setProducts(productsDB.data); 
+            } catch (error) {
+                console.error("Gagal mengambil data produk:", error);
+            }
+        };
+
+        fetchProducts();
+    }, productsDB);
 
     const handleToDelete = (id) => {
         const deleted = deleteProduct(id);
@@ -52,14 +61,14 @@ export default function Products() {
                             </thead>
                             <tbody>
                                 { products.map((product) => (
-                                    <tr
+                                    <tr key={product.id}
                                         class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
                                         <th scope="row"
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {product.product}
+                                            {product.name}
                                         </th>
                                         <td class="px-6 py-4">
-                                            {product.katalog}
+                                            {product.category}
                                         </td>
                                         <td class="px-6 py-4">
                                             {product.stock}

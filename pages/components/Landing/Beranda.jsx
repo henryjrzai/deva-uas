@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { productsData } from '@/pages/service/data/products';
+import { getProductsDB } from "@/pages/service/product.service";
 
 export default function Beranda() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [products, setProducts] = useState([]);
   
   // Data untuk slider dengan gambar dari assets lokal
   const sliderData = [
@@ -42,10 +44,21 @@ export default function Beranda() {
   ];
 
   // Data produk unggulan dengan gambar dari assets lokal
-  const featuredProducts = productsData.slice(0, 4);
+  const featuredProducts = products.slice(0, 4);
 
   // Auto slider
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+          const productsDB = await getProductsDB();
+          setProducts(productsDB.data); 
+      } catch (error) {
+          console.error("Gagal mengambil data produk:", error);
+      }
+    };
+
+    fetchProducts();
+
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev === sliderData.length - 1 ? 0 : prev + 1));
     }, 5000);
@@ -172,7 +185,7 @@ export default function Beranda() {
                 <div className="relative h-48">
                   <Image
                     src={`/${product.image}`}
-                    alt={product.product}
+                    alt={product.name}
                     fill
                     className="object-cover"
                   />
@@ -183,8 +196,8 @@ export default function Beranda() {
                   )}
                 </div>
                 <div className="p-4">
-                  <h3 className="font-medium text-lg text-gray-800 mb-1">{product.product}</h3>
-                  <p className="text-gray-500 text-sm mb-2">{product.katalog}</p>
+                  <h3 className="font-medium text-lg text-gray-800 mb-1">{product.name}</h3>
+                  <p className="text-gray-500 text-sm mb-2">{product.category}</p>
                   <div className="flex items-center">
                     <span className="font-semibold text-lg text-gray-900">Rp {formatPrice(product.price)}</span>
                     {product.discount && (
