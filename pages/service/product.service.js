@@ -16,6 +16,11 @@ export async function getCategoriesDB() {
     return await response.json();
 }
 
+export async function deleteProductDB(id) {
+    const response = await fetch(`/api/deleteProduct?id=${id}`, { method: "DELETE" });
+    return await response.json();
+}
+
 
 export function addProduct(data) {
     const product = productsData.push(data)

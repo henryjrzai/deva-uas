@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 
 import Link from "next/link";
 import { productsData } from "@/pages/service/data/products";
 import { useEffect, useState } from "react";
-import { deleteProduct, getProductsDB } from "@/pages/service/product.service";
+import { deleteProduct, deleteProductDB, getProductsDB } from "@/pages/service/product.service";
 
 export default function Products() {
     const [products, setProducts] = useState([]);
@@ -22,9 +22,13 @@ export default function Products() {
     }, productsDB);
 
     const handleToDelete = (id) => {
-        const deleted = deleteProduct(id);
-        if (deleted) {
-            setProducts(products.filter((product) => product.id !== id));
+        if (confirm("Apakah anda yakin ingin menghapus produk ini?")) {
+            const data = products.findIndex((product) => product.id === id);
+            if (data !== -1) {
+                products.splice(data, 1);
+                setProducts([...products]);
+                deleteProductDB(id)
+            }
         }
     }
 
