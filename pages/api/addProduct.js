@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from "path";
-import { productsData } from "../service/data/products";
-import { addProduct } from "../service/product.service";
+import postgres from "postgres";
+const sql = postgres(process.env.POSTGRES_URL, { ssl: "require" });
 
 // Konfigurasi multer untuk menyimpan file di folder public/images
 const storage = multer.diskStorage({
@@ -21,26 +21,51 @@ export const config = {
   },
 };
 
-export default function handler(req, res) {
-  if (req.method === "POST") {
+// Fungsi untuk menangani upload file dengan Promise
+const uploadFile = (req, res) => {
+  return new Promise((resolve, reject) => {
     upload.single("image")(req, res, (err) => {
       if (err) {
-        return res.status(500).json({ message: "Gagal mengunggah file", error: err.message });
+        reject(err);
+      } else {
+        resolve();
       }
+    });
+  });
+};
 
-      const { id, product, katalog, stock, price } = req.body;
-      const imageUrl = `/images/${req.file.filename}`; // URL gambar
+export default async function handler(req, res) {
+  if (req.method === "POST") {
+    try {
+      // Tunggu proses upload selesai
+      await uploadFile(req, res);
+
+      const { id, product, category, stock, price } = req.body;
+      const imageUrl = `images/${req.file.filename}`; // URL gambar
 
       // Validasi data
-      if (!id || !product || !katalog || !stock || !price) {
+      if (!id || !product || !category || !stock || !price) {
         return res.status(400).json({ message: "Semua field harus diisi!" });
       }
 
-      // Tambahkan produk baru ke array
-      const newProduct = { id, product, katalog, stock: parseInt(stock), price: parseInt(price), image: imageUrl };
+      // Query untuk menambahkan produk ke database
+      const insert = await sql`
+        INSERT INTO products (id, name, price, stock, image, "categoryId")
+        VALUES (${id}, ${product}, ${price}, ${stock}, ${imageUrl}, ${category})
+      `;
 
-      return res.status(201).json({ message: "Produk berhasil ditambahkan!", product: newProduct });
-    });
+      console.log("Insert result:", insert);
+      return res.status(201).json({
+        message: "Produk berhasil ditambahkan!",
+        product: { id, product, category, stock, price, imageUrl },
+      });
+    } catch (error) {
+      console.error("Error saat menambahkan produk:", error);
+      return res.status(500).json({
+        message: "Gagal menambahkan produk",
+        error: error.message,
+      });
+    }
   } else {
     res.setHeader("Allow", ["POST"]);
     res.status(405).json({ message: `Metode ${req.method} tidak diizinkan.` });

@@ -11,6 +11,11 @@ export async function getProductByIdDB(id) {
     return data;
 }
 
+export async function getCategoriesDB() {
+    const response = await fetch("/api/getCategories", { method: "GET" });
+    return await response.json();
+}
+
 
 export function addProduct(data) {
     const product = productsData.push(data)

@@ -102,14 +102,14 @@ const Katalog = (props) => {
               <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src={product.image} 
+                    src={`/${product.image}`} 
                     alt={product.product} 
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="p-4">
                   <div className="flex justify-between items-start">
-                    <h3 className="text-lg font-semibold text-gray-800">{product.product}</h3>
+                    <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
                       {product.category}
                     </span>

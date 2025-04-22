@@ -6,12 +6,13 @@ import { deleteProduct, getProductsDB } from "@/pages/service/product.service";
 
 export default function Products() {
     const [products, setProducts] = useState([]);
+    const productsDB = getProductsDB();
     
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const productsDB = await getProductsDB();
-                setProducts(productsDB.data); 
+                const productsData = await productsDB;
+                setProducts(productsData.data); 
             } catch (error) {
                 console.error("Gagal mengambil data produk:", error);
             }

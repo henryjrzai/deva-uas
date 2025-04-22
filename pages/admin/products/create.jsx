@@ -1,17 +1,33 @@
 import Layout from "@/pages/components/Layout/Layout";
 import { Button, Checkbox, Label, TextInput, Select, FileInput } from "flowbite-react";
 import { katalogProduct } from "@/pages/service/data/products";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addProduct } from "@/pages/service/product.service";
 import LoadingComponent from "@/pages/components/Layout/Loading";
 import { useRouter } from 'next/router';
+import { v4 as uuidv4 } from 'uuid';
+import { getCategoriesDB } from "@/pages/service/product.service";
 
 export default function CreateProduct() {
   const router = useRouter();
   const katalog = katalogProduct;
-  const [product, setProduct] = useState({});
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadError, setUploadError] = useState('');
+  const categoriesData = getCategoriesDB();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+          const productsData = await categoriesData;
+          setCategories(productsData.data); 
+      } catch (error) {
+          console.error("Gagal mengambil data produk:", error);
+      }
+    };
+
+    fetchCategories();
+  }, categoriesData)
 
 
   const handleAddProduct = async (e) => {
@@ -20,18 +36,10 @@ export default function CreateProduct() {
     setUploadError("");
   
     try {
-      // Generate UUID untuk ID produk
-      const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-  
-      // Buat FormData untuk mengirim data produk dan file
       const formData = new FormData();
-      formData.append("id", uuid);
+      formData.append("id", uuidv4() );
       formData.append("product", e.target.product.value);
-      formData.append("katalog", e.target.katalog.value);
+      formData.append("category", e.target.category.value);
       formData.append("stock", e.target.stock.value);
       formData.append("price", e.target.price.value);
       formData.append("image", e.target.image.files[0]);
@@ -41,13 +49,12 @@ export default function CreateProduct() {
         body: formData,
       });
   
-      if (!response.ok) {
+      if (response.status !== 201) {
         throw new Error("Gagal menyimpan produk");
       }
   
       const result = await response.json();
       if (result) {
-        addProduct(result.product);
         router.push("/admin/products");
       }
     } catch (error) {
@@ -73,12 +80,12 @@ export default function CreateProduct() {
               <form className="flex flex-col gap-4 mt-4" onSubmit={handleAddProduct}>
                 <div>
                   <div className="mb-2 block">
-                    <Label htmlFor="katalog">Katalog</Label>
+                    <Label htmlFor="category">Kategori</Label>
                   </div>
-                  <Select id="katalog" name="katalog" required>
-                    {katalog.map((item) => (
-                      <option key={item.id} value={item.nama} className="text-black">
-                        {item.nama}
+                  <Select id="category" name="category" required>
+                    {categories.map((item) => (
+                      <option key={item.id} value={item.id} className="text-black">
+                        {item.name}
                       </option>
                     ))}
                   </Select>
