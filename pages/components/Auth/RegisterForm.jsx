@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { registerUser } from '../../utils/api';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -14,13 +13,6 @@ export default function RegisterForm() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const response = await registerUser(formData);
-    if(response.success) {
-      alert('Registrasi berhasil! Silakan login.');
-      window.location.href = '/login';
-    } else {
-      alert('Registrasi gagal, coba lagi.');
-    }
   };
 
   return (
