@@ -2,7 +2,9 @@ import { productsData } from "@/pages/service/data/products"
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export async function getProductsDB() {
     const response = await fetch(`${baseUrl}/api/getProduct`, { method: "GET" });
-    return response.json();
+    const data = await response.json();
+    console.log(`data product : ${data}`)
+    return data;
 }
 
 export async function getProductByIdDB(id) {

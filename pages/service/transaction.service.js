@@ -2,6 +2,7 @@ export async function getAllTransactionsDB() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await fetch(`${baseUrl}/api/getHistoryTransactions`, { method: "GET" });
     const data = await response.json();
+    console.log(`data transaksi : ${data}`)
     return data;
 }
 
