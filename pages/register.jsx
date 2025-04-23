@@ -1,7 +1,5 @@
 import Link from "next/link"
 import Layout from "./components/Layout/Layout"
-import { registerUser } from "./service/user.service";
-import { login } from "./service/auth.service";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 

@@ -35,20 +35,31 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      // Pastikan untuk memanggil login dengan nilai yang sudah di-trim
-      const authenticate = await login(credentials.email, credentials.password);
-      if(authenticate.success) {
-        console.log(authenticate);
+      const data = {
+        username: credentials.email,
+        password: credentials.password,
+      }
+      const formData = new FormData();
+      formData.append("username", data.username);
+      formData.append("password", data.password);
+
+      const response = await fetch("/api/loginUser", {
+        method: "POST",
+        body: formData,
+      });
+      const result = await response.json();
+      if(result.status === 200) {
         setMessage('Login berhasil! Mengalihkan...');
-        console.log('Login successful. User:', authenticate.data);
         // Redirect berdasarkan role user
-        if (authenticate.data.role === 'admin') {
+        if (result.user.role === 'admin') {
+          login(result.user);
           router.push('/admin');
         } else {
+          login(result.user);
           router.push('/');
         }
       } else {
-        setError(authenticate.message);
+        setError(result.message);
       }
       
     } catch (err) {

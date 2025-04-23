@@ -109,54 +109,7 @@ export async function register(userData) {
  * @param {string} password - User password.
  * @returns {Promise<Object>} - User data with token.
  */
-export async function login(email, password) {
-  // Clean input: trim and convert email/username to lowercase
-  const cleanEmail = email.trim().toLowerCase();
-  const cleanPassword = password.trim();
 
-  if (useMockBackend) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log('Mock login - Input:', cleanEmail, cleanPassword);
-        const user = MOCK_USERS.find(
-          u =>
-            (u.email.toLowerCase() === cleanEmail || u.username.toLowerCase() === cleanEmail) &&
-            u.password === cleanPassword
-        );
-        if (!user) {
-          console.error('User not found in MOCK_USERS');
-          reject(new Error('Login gagal. Email/username atau password salah.'));
-          return;
-        }
-        const token = `mock-token-${Math.random().toString(36).substring(2, 15)}`;
-        const { password: _, ...userWithoutPassword } = user;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-        resolve(userWithoutPassword);
-      }, 800);
-    });
-  }
-  
-  try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
-    });
-    const data = await safeJsonParse(response);
-    if (!response.ok) {
-      throw new Error(data.message || 'Login gagal. Email atau password salah.');
-    }
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-    }
-    return data.user;
-  } catch (error) {
-    console.error('Login failed:', error);
-    throw error;
-  }
-}
 
 /**
  * Logout user.
