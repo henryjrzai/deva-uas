@@ -2,17 +2,14 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/getProduct": "pages/api/getProduct.js",
   "/admin": "pages/admin.js",
+  "/admin/histori": "pages/admin/histori.js",
   "/api/getHistoryTransactions": "pages/api/getHistoryTransactions.js",
   "/admin/products": "pages/admin/products.js",
+  "/api/getProduct": "pages/api/getProduct.js",
   "/admin/products/create": "pages/admin/products/create.js",
   "/api/getCategories": "pages/api/getCategories.js",
   "/api/addProduct": "pages/api/addProduct.js",
-  "/katalog": "pages/katalog.js",
   "/admin/products/edit/[id]": "pages/admin/products/edit/[id].js",
-  "/api/getProductById": "pages/api/getProductById.js",
-  "/api/updateProduct": "pages/api/updateProduct.js",
-  "/api/deleteProduct": "pages/api/deleteProduct.js",
-  "/": "pages/index.js"
+  "/api/getProductById": "pages/api/getProductById.js"
 }
