@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         products.price, 
         products.stock, 
         products.image, 
-        products."categoryId", 
+        products."categoryId" as category_id, 
         products.description,
         categories.name as category 
       FROM products 

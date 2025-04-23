@@ -14,11 +14,13 @@ export default function Page() {
   const categoriesData = getCategoriesDB();
 
   useEffect(() => {
+    if (!router.query.id) return;
     const productId = router.query.id;
     const fetchProducts = async () => {
       try {
           const productDB = await getProductByIdDB(productId);
           setProduct(productDB.data[0]); 
+          console.log(product)
       } catch (error) {
           console.error("Gagal mengambil data produk:", error);
       }
@@ -80,12 +82,10 @@ export default function Page() {
                 <Select
                   id="category"
                   name="category"
-                  value={product.category}  // Ensure the value is bound to the product state
-                  onChange={(e) => setProduct({ ...product, category: e.target.value })} // Update state on select change
                   required
                 >
                   {categories.map((item) => (
-                    <option key={item.id} value={item.id} className="text-black">
+                    <option key={item.id} value={item.id} selected={item.name === product.category} className="text-black">
                       {item.name}
                     </option>
                   ))}
@@ -101,7 +101,6 @@ export default function Page() {
                   required
                   name="product"
                   value={product.name} // Bind the value to product state
-                  onChange={(e) => setProduct({ ...product, name: e.target.value })}
                 />
               </div>
               <div>
@@ -114,7 +113,6 @@ export default function Page() {
                   required
                   name="price"
                   value={product.price} // Bind the value to product state
-                  onChange={(e) => setProduct({ ...product, price: e.target.value })} // Handle input changes
                 />
               </div>
               <div>
@@ -127,7 +125,6 @@ export default function Page() {
                   required
                   name="stock"
                   value={product.stock} // Bind the value to product state
-                  onChange={(e) => setProduct({ ...product, stock: e.target.value })} // Handle input changes
                 />
               </div>
               <Button type="submit" disabled={isLoading}>

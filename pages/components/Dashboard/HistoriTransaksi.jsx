@@ -53,7 +53,7 @@ export default function HistoriTransaksi() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.trxid}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.date}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.customername}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.item}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.productname}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.qty}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.amount}</td>
                 <td className="px-6 py-4 whitespace-nowrap">

@@ -20,11 +20,6 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/admin": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/admin.js"
-    ],
     "/admin/histori": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -35,15 +30,15 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/admin/products.js"
     ],
-    "/admin/products/create": [
+    "/beli/[id]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/admin/products/create.js"
+      "static/chunks/pages/beli/[id].js"
     ],
-    "/admin/products/edit/[id]": [
+    "/katalog": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/admin/products/edit/[id].js"
+      "static/chunks/pages/katalog.js"
     ]
   },
   "ampFirstPages": []
