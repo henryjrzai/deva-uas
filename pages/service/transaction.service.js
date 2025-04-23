@@ -1,7 +1,8 @@
 export async function getAllTransactionsDB() {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await fetch(`${baseUrl}/api/getHistoryTransactions`, { method: "GET" });
-    return response.json();
+    const data = await response.json();
+    return data;
 }
 
 async function totalRevenue() {

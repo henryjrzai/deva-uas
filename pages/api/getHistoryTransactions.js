@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         ON transactions.customer = users.id
         ORDER BY transactions.date DESC
       `;
-      console.log(transactions)
+      console.log(`transactions: `, transactions);
     return res.status(200).json({ status: 200, data: transactions })
   } else {
     return res.status(405).json({ message: 'Method not allowed' })
