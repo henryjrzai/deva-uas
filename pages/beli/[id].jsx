@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { createTransaction } from '../service/transaction.service';
 import { isAuthenticated } from '@/pages/service/auth.service'
 import { getProductByIdDB } from '../service/product.service';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Page() {
     const router = useRouter();
@@ -38,7 +39,7 @@ export default function Page() {
         const userData = localStorage.getItem('user');
         if (userData) {
             const parsedUser = JSON.parse(userData);
-            setUser(parsedUser.name);
+            setUser(parsedUser);
         }
     }, [router.query.id]);
 
@@ -54,26 +55,44 @@ export default function Page() {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
+        setLoad(true);
         e.preventDefault();
         const data = {
-            id: `#TRX-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '')}`,
-            date: new Date().toLocaleDateString('id-ID'),
-            time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
-            item: product.product,
+            id: uuidv4(),
+            trxid: `#TRX-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(':', '')}`,
+            date: new Date().toISOString().split('T')[0],
+            item: product.id,
             qty: quantity,
-            customer: user, 
+            customer: user.id, 
             amount: total,
             status: "Selesai",
         };
-        // buatkan fungsi untuk menyimpan data transaksi
-        const transaction = createTransaction(data);
-        console.log(data)
-        if (transaction) {
-            alert('Transaksi berhasil');
-            router.push('/katalog');
+        const formData = new FormData();
+        formData.append("id", data.id );
+        formData.append('trxid', data.trxid);
+        formData.append('date', data.date);
+        formData.append('item', data.item);
+        formData.append('qty', data.qty);
+        formData.append('customer', data.customer);
+        formData.append('amount', data.amount);
+        formData.append('status', data.status);
+        console.log(formData);
+       const response = await fetch('/api/addTransaction', {
+            method: 'POST',
+            body: formData,
+        });
+        const result = await response.json();
+        if(result) {
+            setLoad(false);
+            alert(result.message);
+            if(user.role === "admin") { 
+                router.push('/admin/histori');
+            } else {
+                router.push('/katalog');
+            }
         } else {
-            alert('Transaksi gagal');
+            alert(result.message);
         }
     }
 
@@ -110,7 +129,7 @@ export default function Page() {
                                         <h3 className="text-xl font-bold">{total.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</h3>
                                         <input type="number" hidden id="totalPrice" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value={total} required />
                                     </div>
-                                    <button type="submit" class="w-full mt-4 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-bold rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Beli</button>
+                                    <button type="submit" class="w-full mt-4 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-bold rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{load ? 'Loading...' : 'Beli'}</button>
                                 </form>
                                 </div>
                             </div>

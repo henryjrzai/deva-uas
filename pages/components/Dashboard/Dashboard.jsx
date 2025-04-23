@@ -9,11 +9,13 @@ import Link from 'next/link';
 import { countProduct } from '@/pages/service/product.service';
 import { getAllTransactions } from '@/pages/service/transaction.service';
 import { totalIncome } from '@/pages/service/transaction.service';
+import { getProductsDB } from "@/pages/service/product.service";
 
 const Dashboard = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
   const [transaction, setTransaction] = useState([]);
   const latestTransaction = transaction
     .sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')))
@@ -27,6 +29,17 @@ const Dashboard = () => {
         router.push('/');
         return;
       }
+
+      const fetchProducts = async () => {
+        try {
+            const productsDB = await getProductsDB();
+            setProducts(productsDB.data); 
+        } catch (error) {
+            console.error("Gagal mengambil data produk:", error);
+        }
+      };
+  
+      fetchProducts();
 
       const currentUser = getCurrentUser();
       if (!currentUser || !isAdmin()) {
@@ -83,7 +96,7 @@ const Dashboard = () => {
                 </div>
                 <div className="ml-5">
                   <h3 className="text-lg font-medium text-gray-900">Produk</h3>
-                  <div className="mt-1 text-3xl font-semibold text-gray-900">{countProduct}</div>
+                  <div className="mt-1 text-3xl font-semibold text-gray-900">{products.length}</div>
                 </div>
               </div>
               <div className="mt-4">
