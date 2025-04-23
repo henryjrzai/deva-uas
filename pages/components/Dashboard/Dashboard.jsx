@@ -6,8 +6,7 @@ import { getCurrentUser, isAdmin, logout } from '@/pages/utils/auth';
 import { isAuthenticated } from '@/pages/service/auth.service'
 import Loading from '../Layout/Loading';
 import Link from 'next/link';
-import { countProduct } from '@/pages/service/product.service';
-import { getAllTransactions } from '@/pages/service/transaction.service';
+import { getAllTransactions, getAllTransactionsDB } from '@/pages/service/transaction.service';
 import { totalIncome } from '@/pages/service/transaction.service';
 import { getProductsDB } from "@/pages/service/product.service";
 
@@ -17,9 +16,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [transaction, setTransaction] = useState([]);
-  const latestTransaction = transaction
-    .sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')))
-    .slice(0, 5);
+  const getAllTransactionsData = getAllTransactionsDB();
+  const latestTransaction = transaction.slice(0, 5);
   
 
   useEffect(() => {
@@ -32,7 +30,7 @@ const Dashboard = () => {
 
       const fetchProducts = async () => {
         try {
-            const productsDB = await getProductsDB();
+            const productsDB = await getAllTransactionsData;
             setProducts(productsDB.data); 
         } catch (error) {
             console.error("Gagal mengambil data produk:", error);
@@ -40,6 +38,18 @@ const Dashboard = () => {
       };
   
       fetchProducts();
+
+      const fetchTransactions = async () => {
+        try {
+          const transactionsData = await getAllTransactionsDB();
+          setTransaction(transactionsData.data); 
+          console.log(transactionsData.data);
+        } catch (error) {
+            console.error("Gagal mengambil data produk:", error);
+        }
+      };
+  
+      fetchTransactions();
 
       const currentUser = getCurrentUser();
       if (!currentUser || !isAdmin()) {
@@ -50,7 +60,6 @@ const Dashboard = () => {
       setUser(currentUser);
       setLoading(false);
     };
-    setTransaction(getAllTransactions)
 
     checkAuth();
   }, [router]);

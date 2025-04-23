@@ -1,12 +1,22 @@
 import Link from 'next/link';
-import { getAllTransactions } from '@/pages/service/transaction.service';
+import { getAllTransactions, getAllTransactionsDB } from '@/pages/service/transaction.service';
 import { useEffect, useState } from 'react';
 export default function HistoriTransaksi() {
   const [transactions, setTransactions] = useState([]);
-  transactions.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'))) 
+  const transactionsDB = getAllTransactionsDB()
   useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const transactionsData = await transactionsDB;
+        setTransactions(transactionsData.data); 
+      } catch (error) {
+          console.error("Gagal mengambil data produk:", error);
+      }
+    };
+
+    fetchTransactions();
     setTransactions(getAllTransactions);
-  })
+  }, transactionsDB)
     return (
       <div className="">
         <Link href="/admin" className="italic text-blue-500">&#x21d0; Kembali</Link>
@@ -25,6 +35,12 @@ export default function HistoriTransaksi() {
                   Customer
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Item
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Jumlah
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Total
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -35,9 +51,11 @@ export default function HistoriTransaksi() {
             <tbody className="bg-white divide-y divide-gray-200">
               {transactions.map((transaction) => (
               <tr key={transaction.id}> {/* Menambahkan key unik untuk setiap transaksi */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.trxid}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.customer}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.customername}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.item}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.qty}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{transaction.amount}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full

@@ -2,10 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/katalog": "pages/katalog.js",
   "/admin/histori": "pages/admin/histori.js",
-  "/beli/[id]": "pages/beli/[id].js",
-  "/api/getProductById": "pages/api/getProductById.js",
-  "/api/getProduct": "pages/api/getProduct.js",
-  "/api/addTransaction": "pages/api/addTransaction.js"
+  "/admin": "pages/admin.js",
+  "/api/getHistoryTransactions": "pages/api/getHistoryTransactions.js"
 }
