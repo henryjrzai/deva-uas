@@ -50,7 +50,8 @@ export default function Page() {
     data.append("stock", e.target.stock.value);
     data.append("price", e.target.price.value);
   
-    const response = await fetch("/api/updateProduct", {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await fetch(`${baseUrl}/api/updateProduct`, {
       method: "POST",
       body: data, // Kirim data sebagai FormData
     });

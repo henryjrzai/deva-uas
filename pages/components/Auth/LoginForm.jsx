@@ -44,7 +44,8 @@ const LoginPage = () => {
       formData.append("username", data.username);
       formData.append("password", data.password);
 
-      const response = await fetch("/api/loginUser", {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${baseUrl}/api/loginUser`, {
         method: "POST",
         body: formData,
       });

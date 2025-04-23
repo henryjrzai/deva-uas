@@ -25,7 +25,8 @@ export default function register() {
         formData.append("role", "customer");
         console.log("formData", formData);
 
-        const response = await fetch("/api/registerUser", {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${baseUrl}/api/registerUser`, {
             method: "POST",
             body: formData,
         });

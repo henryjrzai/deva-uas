@@ -1,23 +1,23 @@
 import { productsData } from "@/pages/service/data/products"
-
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export async function getProductsDB() {
-    const response = await fetch("/api/getProduct", { method: "GET" });
+    const response = await fetch(`${baseUrl}/api/getProduct`, { method: "GET" });
     return response.json();
 }
 
 export async function getProductByIdDB(id) {
-    const response = await fetch(`/api/getProductById?id=${id}`);
+    const response = await fetch(`${baseUrl}/api/getProductById?id=${id}`);
     const data = await response.json();
     return data;
 }
 
 export async function getCategoriesDB() {
-    const response = await fetch("/api/getCategories", { method: "GET" });
+    const response = await fetch(`${baseUrl}/api/getCategories`, { method: "GET" });
     return await response.json();
 }
 
 export async function deleteProductDB(id) {
-    const response = await fetch(`/api/deleteProduct?id=${id}`, { method: "DELETE" });
+    const response = await fetch(`${baseUrl}/api/deleteProduct?id=${id}`, { method: "DELETE" });
     return await response.json();
 }
 

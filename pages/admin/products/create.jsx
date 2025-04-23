@@ -44,7 +44,8 @@ export default function CreateProduct() {
       formData.append("price", e.target.price.value);
       formData.append("image", e.target.image.files[0]);
   
-      const response = await fetch("/api/addProduct", {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${baseUrl}/api/addProduct`, {
         method: "POST",
         body: formData,
       });
