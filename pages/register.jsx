@@ -2,25 +2,41 @@ import Link from "next/link"
 import Layout from "./components/Layout/Layout"
 import { registerUser } from "./service/user.service";
 import { login } from "./service/auth.service";
+import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 
 export default function register() {
+    const router = useRouter()
 
-    const handleRegister = (e) => {
+    const handleRegister = async(e) => {
         e.preventDefault();
         const data = {
+            id: uuidv4(),
             email: e.target.email.value,
             username: e.target.username.value,
             password: e.target.password.value,
             name: e.target.name.value,
         }
-        const register = registerUser(data);
-        if (register.status === 201) {
-            alert(register.message);
-            
-            const auth = login(data.email, data.password);
-            if(auth.success === true){
-                window.location.href = "/";
-            }
+
+        const formData = new FormData();
+        formData.append("id", data.id);
+        formData.append("email", data.email);
+        formData.append("username", data.username);
+        formData.append("password", data.password);
+        formData.append("name", data.name);
+        formData.append("role", "customer");
+        console.log("formData", formData);
+
+        const response = await fetch("/api/registerUser", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (response) {
+            alert("Pendaftaran Berhasil, silahkan login");
+            router.push("/login");
+        } else {
+            alert(`Gagal mendaftar, silahkan coba lagi, ${response.message}`);
         }
     }
 

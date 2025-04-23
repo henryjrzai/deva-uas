@@ -184,7 +184,7 @@ export default function Beranda() {
               <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
                 <div className="relative h-48">
                   <Image
-                    src={`${product.image}`}
+                    src={`/${product.image}`}
                     alt={product.name}
                     fill
                     className="object-cover"

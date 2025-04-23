@@ -2,7 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/admin/histori": "pages/admin/histori.js",
-  "/admin": "pages/admin.js",
-  "/api/getHistoryTransactions": "pages/api/getHistoryTransactions.js"
+  "/": "pages/index.js",
+  "/katalog": "pages/katalog.js",
+  "/register": "pages/register.js",
+  "/api/registerUser": "pages/api/registerUser.js",
+  "/login": "pages/login.js"
 }

@@ -1,4 +1,6 @@
 import users from "./data/users";
+
+
 export function registerUser(user) {
     const newUser = {
         id: users.length + 1,
