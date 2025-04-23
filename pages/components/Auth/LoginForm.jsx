@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 // Gunakan path relatif jika folder utils berada di root
 import { isAuthenticated, getCurrentUser } from '@/pages/utils/auth';
 import { login } from "../../service/auth.service";
+import Link from 'next/link';
 
 const LoginPage = () => {
   const router = useRouter();
@@ -94,7 +95,7 @@ const LoginPage = () => {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -127,7 +128,7 @@ const LoginPage = () => {
               />
             </div>
           </div>
-
+          
           <div>
             <button
               type="submit"
@@ -141,9 +142,9 @@ const LoginPage = () => {
           </div>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className=" text-sm text-gray-600">
               Belum punya akun?{' '}
-              <a
+              <Link
                 href="/register"
                 className="font-medium text-blue-600 hover:text-blue-500"
                 onClick={(e) => {
@@ -152,7 +153,15 @@ const LoginPage = () => {
                 }}
               >
                 Daftar di sini
-              </a>
+              </Link>
+            </p>
+            <p className=" text-sm text-gray-600">
+              <Link
+                href="/auth/forgotpassword"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                lupa password?
+              </Link>
             </p>
           </div>
         </form>
