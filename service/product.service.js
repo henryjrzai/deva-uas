@@ -1,4 +1,4 @@
-import { productsData } from "@/pages/service/data/products"
+import { productsData } from "@/service/data/products.js"
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export async function getProductsDB() {
     const response = await fetch(`${baseUrl}/api/getProduct`, { method: "GET" });

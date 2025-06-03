@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 // Jika kamu menggunakan alias, pastikan alias tersebut dikonfigurasi di jsconfig.json/tsconfig.json;
 // Jika tidak, gunakan path relatif, misalnya: import { isAuthenticated, getCurrentUser, isAdmin, logout } from '../../utils/auth';
-import { getCurrentUser, isAdmin, logout } from '@/pages/utils/auth';
-import { isAuthenticated } from '@/pages/service/auth.service'
+import { getCurrentUser, isAdmin, logout } from '@/utils/auth';
+import { isAuthenticated } from '@/service/auth.service'
 import Loading from '../Layout/Loading';
 import Link from 'next/link';
-import { getAllTransactions, getAllTransactionsDB } from '@/pages/service/transaction.service';
-import { totalIncome } from '@/pages/service/transaction.service';
-import { getProductsDB } from "@/pages/service/product.service";
+import { getAllTransactions, getAllTransactionsDB } from '@/service/transaction.service';
+import { totalIncome } from '@/service/transaction.service';
+import { getProductsDB } from "@/service/product.service";
 
 const Dashboard = () => {
   const router = useRouter();

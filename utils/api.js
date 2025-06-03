@@ -1,4 +1,4 @@
-import { API_URL } from './constants';
+import { API_URL } from './constants.js';
 
 /**
  * Helper function to safely parse JSON from a response.

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import Layout from "../../components/Layout/Layout"
 import { useRouter } from 'next/router';
-import { isAuthenticated } from '@/pages/service/auth.service'
-import { getCurrentUser, isAdmin, logout } from '@/pages/utils/auth';
+import { isAuthenticated } from '@/service/auth.service'
+import { getCurrentUser, isAdmin, logout } from '@/utils/auth';
 import Loading from '../../components/Layout/Loading';
 import Products from '../../components/Dashboard/Products';
 

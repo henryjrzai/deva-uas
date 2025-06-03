@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { katalogProduct, productsData } from '@/pages/service/data/products';
+import { katalogProduct, productsData } from '@/service/data/products';
 import Layout from '@/pages/components/Layout/Layout';
 import { Button, Checkbox, Label, TextInput, Select, FileInput } from 'flowbite-react';
-import { updateProduct, getProductByIdDB } from '@/pages/service/product.service';
-import { getCategoriesDB } from "@/pages/service/product.service";
+import { updateProduct, getProductByIdDB } from '@/service/product.service';
+import { getCategoriesDB } from "@/service/product.service";
 
 export default function Page() {
   const router = useRouter();

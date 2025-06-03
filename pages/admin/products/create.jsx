@@ -1,12 +1,12 @@
 import Layout from "@/pages/components/Layout/Layout";
 import { Button, Checkbox, Label, TextInput, Select, FileInput } from "flowbite-react";
-import { katalogProduct } from "@/pages/service/data/products";
+import { katalogProduct } from "@/service/data/products";
 import { useEffect, useState } from "react";
-import { addProduct } from "@/pages/service/product.service";
+import { addProduct } from "@/service/product.service";
 import LoadingComponent from "@/pages/components/Layout/Loading";
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
-import { getCategoriesDB } from "@/pages/service/product.service";
+import { getCategoriesDB } from "@/service/product.service";
 
 export default function CreateProduct() {
   const router = useRouter();

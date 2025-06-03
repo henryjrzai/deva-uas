@@ -1,4 +1,4 @@
-import { API_URL } from './constants';
+import { API_URL } from './constants.js';
 
 // Mock users for development/testing
 const MOCK_USERS = [

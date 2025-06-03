@@ -1,8 +1,8 @@
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 import Link from "next/link";
-import { productsData } from "@/service/data/products";
+import { productsData } from "@/pages/service/data/products";
 import { useEffect, useState } from "react";
-import { deleteProduct, deleteProductDB, getProductsDB } from "@/service/product.service";
+import { deleteProduct, deleteProductDB, getProductsDB } from "@/pages/service/product.service";
 
 export default function Products() {
     const [products, setProducts] = useState([]);

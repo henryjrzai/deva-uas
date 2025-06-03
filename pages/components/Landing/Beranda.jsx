@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { productsData } from '@/pages/service/data/products';
-import { getProductsDB } from "@/pages/service/product.service";
+import { productsData } from '@/service/data/products';
+import { getProductsDB } from "@/service/product.service";
 
 export default function Beranda() {
   const [currentSlide, setCurrentSlide] = useState(0);

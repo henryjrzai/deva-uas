@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchProducts } from '@/pages/utils/api';
+import { fetchProducts } from '@/utils/api';
 
 // Assuming these API functions exist in the api.js file
 // If not, you'll need to implement them

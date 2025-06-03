@@ -3,9 +3,9 @@ import Layout from '../components/Layout/Layout';
 import loading from '../components/Layout/Loading';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createTransaction } from '../service/transaction.service';
-import { isAuthenticated } from '@/pages/service/auth.service'
-import { getProductByIdDB } from '../service/product.service';
+import { createTransaction } from '@/service/transaction.service';
+import { isAuthenticated } from '@/service/auth.service'
+import { getProductByIdDB } from '@/service/product.service';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function Page() {
